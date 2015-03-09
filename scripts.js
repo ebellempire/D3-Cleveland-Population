@@ -204,7 +204,7 @@ function doDivergingChart(csv,container,span){
 	
 	addUISliderDiv(container);    
 	
-	var svg = d3.select(container).append("svg")
+	var chart = d3.select(container).append("svg")
 	    .attr("width", width + margin.left + margin.right)
 	    .attr("height", height + margin.top + margin.bottom)
 	  .append("g")
@@ -249,24 +249,24 @@ function doDivergingChart(csv,container,span){
 		x.domain(d3.extent(data, function(d) { return +d.change_sum; }));
 		y.domain(data.map(function(d) { return d.year; }));
 		
-		svg.selectAll(".bar")
+		var bars = chart.selectAll(".bar")
 		  .data(data)
-		.enter().append("rect")
-		  .attr("fill", function(d,i){return colors(+d.population)})
-		  .attr("class", function(d) { return +d.change_sum < 0 ? "bar negative" : "bar positive"; })
-		  .attr("y", function(d) { return y(d.year); })
-		  .attr("x", function(d) { return x(0); })
-		  .attr("width", 0)
-		  .attr("height", y.rangeBand())
-		  .on('mouseover', tip.show)
-		  .on('mouseout', tip.hide)	
-		  .transition()
-		  	  .attr("x", function(d) { return x(Math.min(0, +d.change_sum)); })
-		  	  .attr("width", function(d) { return Math.abs(x( +d.change_sum) - x(0)); })
-	    	  .duration(500)
-			  .delay(100) 
-			  		
-		svg.append("g")
+		  .enter()
+		  .append("rect")
+			  .attr("fill", function(d,i){return colors(+d.population)})
+			  .attr("class", function(d) { return +d.change_sum < 0 ? "bar negative" : "bar positive"; })
+			  .attr("y", function(d) { return y(d.year); })
+			  .attr("x", function(d) { return x(0); })
+			  .attr("width", 0)
+			  .attr("height", y.rangeBand())
+			  .on('mouseover', tip.show)
+			  .on('mouseout', tip.hide)	
+			  .transition()
+			  	  .attr("x", function(d) { return x(Math.min(0, +d.change_sum)); })
+			  	  .attr("width", function(d) { return Math.abs(x( +d.change_sum) - x(0)); })
+		    	  .duration(500)
+				  .delay(100)  
+
 		var labels = chart.selectAll(".label")
 		  .data(data)
 		  .enter()
@@ -276,6 +276,8 @@ function doDivergingChart(csv,container,span){
 		  	.attr("height", y.rangeBand())
 		  	.attr("y", function(d) { return (y(d.year)+(y.rangeBand()*.66)); })
 			.attr("x", function(d) { var neg=(x(0)+5); var pos=(x(0)-30); return +d.change_sum < 0 ? neg : pos; })
+			    			  		
+		chart.append("g")
 		  .attr("class", "x axis")
 		  .call(xAxis)
 		.append("line")
@@ -283,14 +285,14 @@ function doDivergingChart(csv,container,span){
 		  .attr("y2", y(0))
 		  .attr("x2", width)	 
 		  		
-		svg.append("g")
+		chart.append("g")
 		  .attr("class", "y axis")
 		.append("line")
 		  .attr("x1", x(0))
 		  .attr("x2", x(0))
 		  .attr("y2", height);
 		  
-		svg.call(tip)
+		chart.call(tip)
 		  	  
 	});
 	

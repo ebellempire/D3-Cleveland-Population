@@ -76,6 +76,9 @@ p{
 	fill:#04B3D2;
 }
 
+.label{
+	font-size: .65em;
+}
 
 .axis text {
 	font:10px sans-serif;
